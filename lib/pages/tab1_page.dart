@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:i_news/search/searc_delegate.dart';
 import 'package:i_news/services/news.dart';
 import 'package:i_news/widgets/noticias_list.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,16 @@ class _Tab1PageState extends State<Tab1Page> with AutomaticKeepAliveClientMixin{
     final headlines = Provider.of<News>(context).headlines;
 
     return Scaffold(
+
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            icon: Icon( Icons.search_outlined ),
+            onPressed: () => showSearch(context: context, delegate: NewsSearchDelegate() ),
+          )
+        ],
+      ),
+
       body: /*( headlines.length == 0 )
           ? Center(child: CircularProgressIndicator() )
           : Loader(headlines),*/

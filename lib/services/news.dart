@@ -5,14 +5,15 @@ import 'package:i_news/models/models.dart';
 import 'package:http/http.dart' as http;
 
 const _URL_NEWS = 'https://newsapi.org/v2';
-//const _APIKEY = 'be07a2439b2f4a77a1316677396236d9';
+const _APIKEY = 'be07a2439b2f4a77a1316677396236d9';
 // Primera KEY: 
-const _APIKEY = '0282eff951e747f99f04443ee4804198';
+//const _APIKEY = '0282eff951e747f99f04443ee4804198';
 
 
 class News with ChangeNotifier {
   List<Article> headlines = [];
   List<String> titles = [];
+  List<Article> noticiasTitular = [];
   String _selectedCategory = 'general';
 
   bool _isLoading = true;
@@ -76,8 +77,6 @@ class News with ChangeNotifier {
     this.headlines.addAll(newsRes.articles);
 
     
-    print(headlines);
-    
     notifyListeners();
   }
 
@@ -114,6 +113,27 @@ class News with ChangeNotifier {
       this._isLoading = false;
       notifyListeners();
   }
+
+
+  // ignore: missing_return
+  Future getnoticiaTitular(String busqueda) async{
+
+    final url = Uri.parse('$_URL_NEWS/top-headlines?language=en&q=$busqueda&apiKey=$_APIKEY');
+    //final url = Uri.parse("https://newsapi.org/v2/top-headlines?apiKey=0282eff951e747f99f04443ee4804198&country=us");
+    final resp = await http.get(url);
+
+    final newsRes = newsReponseFromJson(resp.body);
+
+    this.noticiasTitular.addAll(newsRes.articles);
+
+    
+    print(noticiasTitular);
+    
+    notifyListeners();
+
+    return noticiasTitular;
+  }
+
 
   
 }

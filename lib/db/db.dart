@@ -86,4 +86,24 @@ class DB {
 
     return resultadoFinal[0];
   }
+
+  static Future<Noticia> getNoticiaNombre(Noticia noticia) async {
+
+    Database database = await _openDB();
+
+    
+    //final Noticia noticia = await database.query("noticiass", where: "id = ?", whereArgs: [noticia.id]);
+    List<Map<String,dynamic>> resultadoMap = await database.rawQuery('SELECT * FROM noticiass WHERE titulo = "%${noticia.id}%"');
+
+    var resultadoFinal = List.generate(resultadoMap.length, (i) => 
+        Noticia(
+        id: resultadoMap[i]['id'],
+        titulo: resultadoMap[i]['titulo'],
+        nombreFuente: resultadoMap[i]['nombreFuente'],
+        contenido: resultadoMap[i]['contenido'],
+        urlImagen: resultadoMap[i]['urlImagen'],
+        url: resultadoMap[i]['url']));
+
+    return resultadoFinal[0];
+  }
 }
