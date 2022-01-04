@@ -41,6 +41,12 @@ class _Tab3PageState extends State<Tab3Page> with AutomaticKeepAliveClientMixin{
       length: 7,
       child: Scaffold(
         appBar: AppBar(
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.elliptical(20, 5),
+          )
+          ),
           bottom: TabBar(
             isScrollable: true,
             indicator: CircleTabIndicator(color: Colors.white, radius: 3),

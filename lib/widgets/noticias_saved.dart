@@ -6,6 +6,7 @@ import 'package:i_news/db/db.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:i_news/pages/noticia_web.dart';
+import 'package:i_news/search/searc_delegate.dart';
 
 
 class Listado extends StatelessWidget {
@@ -313,12 +314,13 @@ class _NewsCardState2 extends State<NewsCard2> {
                               decoration: BoxDecoration(
                                 image: DecorationImage(
                                   image: AssetImage('assets/loading.gif'),
-                                  fit: BoxFit.fill
+                                  fit: BoxFit.cover
                                 )
                               ),
                             ),
                             errorWidget: (context, url, error) => new Icon(Icons.error),
                             fit: BoxFit.cover,
+
                             
                           ),
                         ),
@@ -365,3 +367,129 @@ class _NewsCardState2 extends State<NewsCard2> {
 
 
 
+class ListadoSaved extends StatelessWidget {
+
+  final String titular;
+
+  ListadoSaved(this.titular);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        child: ListaSaved(titular),
+      );
+  }
+}
+
+class ListaSaved extends StatefulWidget {
+
+  final String titular;
+
+  ListaSaved(this.titular);
+
+  @override
+  _MiListaSaved createState() => _MiListaSaved(titular);
+
+}
+
+class _MiListaSaved extends State<ListaSaved> {
+
+  final String titular;
+
+  _MiListaSaved(this.titular);
+
+  List<Noticia> noticias = [];
+
+  @override
+  void initState() {
+    cargaNoticias();
+    super.initState();
+  }
+
+  cargaNoticias() async {
+    List<Noticia> auxNoticia = await DB.getNoticias();
+
+    setState(() {
+      noticias = auxNoticia;
+    });
+
+  }
+
+  // ignore: missing_return
+  Widget filtrarNoticias(Noticia noticia) {
+
+    String noticiaParseado = noticia.titulo.trim().toLowerCase();
+
+    String titularParseado = titular.trim().toLowerCase();
+
+    if (noticiaParseado.contains(titularParseado)) {
+
+      NewsSavedSearchDelegate.actualizarHistorial(noticia);
+
+      print("HISTORIAAAL");
+      print(NewsSavedSearchDelegate.historial);
+      
+      return NewsCard2(noticia);
+    }
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    var noticiasReversed = new List.from(noticias.reversed);
+
+    return ListView.builder(
+        itemCount: noticias.length,
+        itemBuilder:
+            (context, i) =>
+              Dismissible(key: UniqueKey(),
+                direction: DismissDirection.startToEnd,
+                background: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container (
+                    
+                    color: Colors.red[400],
+                    padding: EdgeInsets.only(left: 5),
+                      child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Icon(Icons.delete, color: Colors.white)
+                              )
+                              ),
+                ),
+            onDismissed: (direction) async {
+              await DB.delete(noticiasReversed[i]);
+
+
+              final snackbarUndo = SnackBar(
+                
+                content: Text('Noticia eliminada!'),
+                backgroundColor: Colors.red,
+                action: SnackBarAction(
+                  label: 'Undo', 
+                  textColor: Colors.white,
+                  onPressed: () async {
+                    await DB.insert(noticiasReversed[i]);
+
+                    cargaNoticias();
+                  }
+                ),
+                shape: RoundedRectangleBorder( 
+                  borderRadius: BorderRadius.all(Radius.circular(10))
+                ),
+                behavior: SnackBarBehavior.floating,
+                
+      
+              );
+
+              ScaffoldMessenger.of(context).showSnackBar(snackbarUndo);
+              
+
+              cargaNoticias();
+            },
+            child: filtrarNoticias(noticiasReversed[i]),
+          ),
+    );
+  }
+
+}

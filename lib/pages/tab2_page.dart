@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:i_news/pages/tab1_page.dart';
+import 'package:i_news/search/searc_delegate.dart';
 import 'package:i_news/widgets/noticias_saved.dart';
 
 
@@ -33,11 +34,17 @@ class _Tab2PageState extends State<Tab2Page> with AutomaticKeepAliveClientMixin{
   @override
   Widget build(BuildContext context) {
     super.build(context);
-
-    Listado listado = new Listado();
  
 
     return Scaffold(
+
+      appBar:AppBar(
+        actions: [
+          IconButton(
+            icon: Icon(Icons.search_rounded),
+            onPressed: () => showSearch(context: context, delegate: NewsSavedSearchDelegate())),
+        ],
+      ),
       
       body: _isLoading
           ? GrupoEstructuraTarjeta(35)

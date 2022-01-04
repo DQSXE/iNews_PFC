@@ -39,9 +39,16 @@ class _Tab1PageState extends State<Tab1Page> with AutomaticKeepAliveClientMixin{
     return Scaffold(
 
       appBar: AppBar(
+        elevation: 0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.elliptical(20, 5),
+          )
+          ),
+
         actions: [
           IconButton(
-            icon: Icon( Icons.search_outlined ),
+            icon: Icon( Icons.search_rounded ),
             onPressed: () => showSearch(context: context, delegate: NewsSearchDelegate() ),
           )
         ],
