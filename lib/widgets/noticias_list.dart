@@ -5,6 +5,7 @@ import 'package:i_news/models/models.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:i_news/pages/noticia_web.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:share/share.dart';
 
 
 class Noticias extends StatelessWidget {
@@ -721,9 +722,17 @@ class NewsCard extends StatefulWidget {
 class _NewsCardState extends State<NewsCard> {
 
   final Article noticia;
+  bool canVibrate = false;
 
   _NewsCardState( this.noticia );
 
+  @override
+  void initState() {
+    super.initState();
+    
+  }
+
+  
   
 
   // ignore: missing_return
@@ -819,6 +828,12 @@ class _NewsCardState extends State<NewsCard> {
 
         setState(() {});
 
+      },
+
+
+      onLongPress: () {
+        
+        Share.share("Mira esta noticia: \n\n ${noticia.title} \n\n ${noticia.url} \n\n ${noticia.source.name}");
       },
 
       child: Column(

@@ -1,18 +1,29 @@
 
 
-import 'package:cached_network_image/cached_network_image.dart';
+
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:i_news/db/db.dart';
 import 'package:i_news/db/models_db/noticia.dart';
 import 'package:i_news/models/models.dart';
-import 'package:i_news/pages/noticia_web.dart';
-import 'package:i_news/pages/tab1_page.dart';
 import 'package:i_news/services/news.dart';
 import 'package:i_news/widgets/noticias_list.dart';
 import 'package:i_news/widgets/noticias_saved.dart';
-import 'package:provider/provider.dart';
 
 class NewsSearchDelegate extends SearchDelegate {
+
+  final snackbarEmpty = SnackBar(
+          
+    content: Text('Debe introduci algún valor en el campo!'),
+    duration: Duration(seconds: 1),
+    backgroundColor: Colors.amber,
+    shape: RoundedRectangleBorder( 
+      borderRadius: BorderRadius.all(Radius.circular(10))
+    ),
+    behavior: SnackBarBehavior.floating,
+          
+
+  );
 
   @override
     String get searchFieldLabel => "Buscar...";
@@ -41,8 +52,21 @@ class NewsSearchDelegate extends SearchDelegate {
   
     if(query.trim().length == 0 ) {
 
-
-      return Text('no hay valor en la query');
+      //ScaffoldMessenger.of(context).showSnackBar(snackbarEmpty);
+      return Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Text(
+            'Debes introducir algún valor en el campo!',
+            style: GoogleFonts.quicksand(
+              fontSize: 16,
+              decorationThickness: 20,
+              color: Colors.black.withOpacity(0.5)
+            ),
+          ),
+        ),
+      );
     }
     
     final noticiasTitularService = new News();
@@ -62,14 +86,61 @@ class NewsSearchDelegate extends SearchDelegate {
 
 
           return articulos.isEmpty
-          ? GrupoEstructuraTarjeta(30)
+          ? Container(
+            color: Colors.white,
+            child: Column(
+              
+              children: [
+
+                Container(
+                  height: 50,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text(
+                      'No se han encontrado resultados!',
+                      style: GoogleFonts.quicksand(
+                        fontSize: 18,
+                        decorationThickness: 20,
+                        color: Colors.black.withOpacity(0.5)
+                      ),
+                    ),
+                  ),
+                ),
+
+                Container(
+                  height: 255,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(image: 
+                    AssetImage("assets/404_3.gif"),
+                    fit: BoxFit.fitWidth
+                    ),
+                    
+
+                  ),
+                  ),
+              ],
+            ),
+          )
           : Noticias(snapshot.data);
         }
 
         else {
 
 
-          return GrupoEstructuraTarjeta(30);
+          return Container(
+            height: 670,
+            
+            decoration: BoxDecoration(
+              color: Colors.white,
+              image: DecorationImage(image: 
+              AssetImage("assets/loading.gif"),
+              
+              ),
+              
+              
+
+            ),
+          );
         }
         
 
@@ -81,9 +152,49 @@ class NewsSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
 
-    return ListTile(
-      title: Text('Suggestions'),
+    return Container(
+      color: Colors.white,
+      child: Column(
+
+        children: [
+
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              
+              
+
+            ),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                'Busca noticias de todo el mundo!',
+                style: GoogleFonts.quicksand(
+                  fontSize: 18,
+                  decorationThickness: 20,
+                  color: Colors.black.withOpacity(0.5)
+                ),
+              ),
+            ),
+          ),
+
+          Container(
+            height: 255,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              image: DecorationImage(image: 
+              AssetImage("assets/suggestions_recortada.gif"),
+              fit: BoxFit.fitWidth
+              ),
+              
+
+            ),
+            ),
+        ],
+      ),
     );
+    
   }
 
 
@@ -93,25 +204,26 @@ class NewsSearchDelegate extends SearchDelegate {
 
 class NewsSavedSearchDelegate extends SearchDelegate {
 
+  final snackbarEmpty = SnackBar(
+          
+    content: Text('Debe introducir algún valor en el campo!'),
+    duration: Duration(seconds: 1),
+    backgroundColor: Colors.amber,
+    shape: RoundedRectangleBorder( 
+      borderRadius: BorderRadius.all(Radius.circular(10))
+    ),
+    behavior: SnackBarBehavior.floating,
+          
+
+  );
+
   static final List<Noticia> historial = [];
 
 
-  static actualizarHistorial(Noticia noticiaHistorial) async {
 
-    if(await DB.getNoticia(noticiaHistorial) != noticiaHistorial) {
-      
-      historial.add(noticiaHistorial);
-    }
-
-    else {
-
-    }
-  }
-
-  
 
   @override
-    String get searchFieldLabel => "Buscar......";
+    String get searchFieldLabel => "Buscar...";
 
 
   @override
@@ -128,7 +240,10 @@ class NewsSavedSearchDelegate extends SearchDelegate {
   Widget buildLeading(BuildContext context) {
     return IconButton(
         icon: Icon(Icons.arrow_back_ios_new_rounded),
-        onPressed: () => this.close(context, null),
+        onPressed: () {
+
+          return this.close(context, null);
+        } 
       );
   }
 
@@ -138,8 +253,21 @@ class NewsSavedSearchDelegate extends SearchDelegate {
   
     if(query.trim().length == 0 ) {
 
-
-      return Text('no hay valor en la query');
+      
+      return Padding(
+        padding: const EdgeInsets.only(top: 20),
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: Text(
+            'Debes introducir algún valor en el campo!',
+            style: GoogleFonts.quicksand(
+              fontSize: 16,
+              decorationThickness: 20,
+              color: Colors.black.withOpacity(0.5)
+            ),
+          ),
+        ),
+      );
     }
     
     
@@ -155,17 +283,66 @@ class NewsSavedSearchDelegate extends SearchDelegate {
         if(snapshot.hasData) {
 
           List<Noticia> articulos = snapshot.data;
+          
 
+          
 
-          return articulos.isEmpty
-          ? GrupoEstructuraTarjeta(30)
+          return comprobarResultaddos(articulos).isEmpty
+          ? Container(
+            color: Colors.white,
+            child: Column(
+              
+              children: [
+
+                Container(
+                  height: 50,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text(
+                      'No se han encontrado resultados!',
+                      style: GoogleFonts.quicksand(
+                        fontSize: 18,
+                        decorationThickness: 20,
+                        color: Colors.black.withOpacity(0.5)
+                      ),
+                    ),
+                  ),
+                ),
+
+                Container(
+                  height: 255,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(image: 
+                    AssetImage("assets/404_3.gif"),
+                    fit: BoxFit.fitWidth
+                    ),
+                    
+
+                  ),
+                  ),
+              ],
+            ),
+          )
           : ListadoSaved(this.query);
         }
 
         else {
 
 
-          return GrupoEstructuraTarjeta(30);
+          return Container(
+            height: 670,
+            
+            decoration: BoxDecoration(
+              color: Colors.white,
+              image: DecorationImage(image: 
+              AssetImage("assets/loading.gif"),
+              
+              ),
+              
+              
+
+            ),
+          );
         }
         
 
@@ -174,54 +351,76 @@ class NewsSavedSearchDelegate extends SearchDelegate {
     );
   }
 
+  List<Noticia> comprobarResultaddos(List<Noticia> articulos) {
+    
+    String queryParseada = this.query.trim().toLowerCase();
+
+    List<Noticia> articulosBusqueda = [];
+    
+
+    for (var i = 0; i < articulos.length; i++) {
+      
+      String titularParseado = articulos[i].titulo.trim().toLowerCase();
+
+      if(titularParseado.contains(queryParseada)) {
+
+        articulosBusqueda.add(articulos[i]);
+      }
+    }
+
+    return articulosBusqueda;
+  }
+
   @override
   Widget buildSuggestions(BuildContext context) {
     
 
-    return ListTile(
-      title: _showCountries( historial ),
-    );
-  }
+    return Container(
+      color: Colors.white,
+      child: Column(
 
-  Widget _showCountries( List<Noticia> noticiasSuggestion ) {
+        children: [
 
-    return Flexible(
-      child: ListView.builder(
-        
-        itemCount: historial.length,
-        itemBuilder: ( context , i) {
-    
-          final noticiaHistorial = historial[i];
-    
-          return Flexible(
-            child: ListTile(
-              leading: SizedBox(
-                height: 50,
-                width: 50
-                ,
-                child: CachedNetworkImage(imageUrl: noticiaHistorial.urlImagen, placeholder: (context, url) => new Container(
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                        image: AssetImage('assets/loading.gif'),
-                                        fit: BoxFit.cover
-                                      )
-                                    ),
-                                  ),
-                                  errorWidget: (context, url, error) => new Icon(Icons.error),
-                                  fit: BoxFit.cover,),
-              ),
-              title: Text( noticiaHistorial.titulo, maxLines: 1),
-              onTap: () {
-                // print( pais );
-                Navigator.push(context, MaterialPageRoute(builder: (context) => ShowPage(noticiaHistorial.url)));
-              },
+          Container(
+            height: 50,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              
+              
+
             ),
-          );
-    
-        },
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Text(
+                'Busca en tus noticias guardadas!',
+                style: GoogleFonts.quicksand(
+                  fontSize: 18,
+                  decorationThickness: 20,
+                  color: Colors.black.withOpacity(0.5)
+                ),
+              ),
+            ),
+          ),
+
+          Container(
+            height: 255,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              image: DecorationImage(image: 
+              AssetImage("assets/saved_suggestions.gif"),
+              fit: BoxFit.fitWidth
+              ),
+              
+
+            ),
+            ),
+        ],
       ),
     );
-
+   
   }
+
+
+    
 
 }

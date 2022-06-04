@@ -69,7 +69,7 @@ class News with ChangeNotifier {
   getHead() async{
 
     final url = Uri.parse('$_URL_NEWS/top-headlines?apiKey=$_APIKEY&country=us');
-    //final url = Uri.parse("https://newsapi.org/v2/top-headlines?apiKey=0282eff951e747f99f04443ee4804198&country=us");
+
     final resp = await http.get(url);
 
     final newsRes = newsReponseFromJson(resp.body);

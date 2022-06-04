@@ -16,7 +16,7 @@ class Tab3Page extends StatefulWidget {
   _Tab3PageState createState() => _Tab3PageState();
 }
 
-class _Tab3PageState extends State<Tab3Page> with AutomaticKeepAliveClientMixin{
+class _Tab3PageState extends State<Tab3Page> {
 
   bool _isLoading;
 
@@ -24,7 +24,7 @@ class _Tab3PageState extends State<Tab3Page> with AutomaticKeepAliveClientMixin{
   @override
   void initState() {
     _isLoading = true;
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         _isLoading = false;
       });
@@ -34,7 +34,6 @@ class _Tab3PageState extends State<Tab3Page> with AutomaticKeepAliveClientMixin{
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     final newsService = Provider.of<News>(context);
 
     return DefaultTabController(
@@ -97,9 +96,6 @@ class _Tab3PageState extends State<Tab3Page> with AutomaticKeepAliveClientMixin{
         )
     );
   }
-
-  @override
-  bool get wantKeepAlive => true;
 }
 
 

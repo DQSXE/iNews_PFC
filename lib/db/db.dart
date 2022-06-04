@@ -93,7 +93,27 @@ class DB {
 
     
     //final Noticia noticia = await database.query("noticiass", where: "id = ?", whereArgs: [noticia.id]);
-    List<Map<String,dynamic>> resultadoMap = await database.rawQuery('SELECT * FROM noticiass WHERE titulo = "%${noticia.id}%"');
+    List<Map<String,dynamic>> resultadoMap = await database.rawQuery('SELECT * FROM noticiass WHERE titulo = "%${noticia.titulo}%"');
+
+    var resultadoFinalNombre = List.generate(resultadoMap.length, (i) => 
+        Noticia(
+        id: resultadoMap[i]['id'],
+        titulo: resultadoMap[i]['titulo'],
+        nombreFuente: resultadoMap[i]['nombreFuente'],
+        contenido: resultadoMap[i]['contenido'],
+        urlImagen: resultadoMap[i]['urlImagen'],
+        url: resultadoMap[i]['url']));
+
+    return resultadoFinalNombre;
+  }
+
+  static Future<List<Noticia>> getNoticiasNombres(String titular) async {
+
+    Database database = await _openDB();
+
+    
+    //final Noticia noticia = await database.query("noticiass", where: "id = ?", whereArgs: [noticia.id]);
+    List<Map<String,dynamic>> resultadoMap = await database.rawQuery('SELECT * FROM noticiass WHERE titulo = "%${titular}%"');
 
     var resultadoFinalNombre = List.generate(resultadoMap.length, (i) => 
         Noticia(

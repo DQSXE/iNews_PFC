@@ -15,7 +15,7 @@ class Tab1Page extends StatefulWidget {
 }
 
 
-class _Tab1PageState extends State<Tab1Page> with AutomaticKeepAliveClientMixin{
+class _Tab1PageState extends State<Tab1Page> {
 
   bool _isLoading;
 
@@ -23,7 +23,7 @@ class _Tab1PageState extends State<Tab1Page> with AutomaticKeepAliveClientMixin{
   @override
   void initState() {
     _isLoading = true;
-    Future.delayed(const Duration(seconds: 2), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       setState(() {
         _isLoading = false;
       });
@@ -49,8 +49,13 @@ class _Tab1PageState extends State<Tab1Page> with AutomaticKeepAliveClientMixin{
         actions: [
           IconButton(
             icon: Icon( Icons.search_rounded ),
-            onPressed: () => showSearch(context: context, delegate: NewsSearchDelegate() ),
-          )
+            onPressed: () => showSearch(context: context, delegate: NewsSearchDelegate()).then((value) => setState((){_isLoading = true;
+            Future.delayed(const Duration(milliseconds: 500), () {
+              setState(() {
+                _isLoading = false;
+              });
+            });}))),
+          
         ],
       ),
 
@@ -58,7 +63,7 @@ class _Tab1PageState extends State<Tab1Page> with AutomaticKeepAliveClientMixin{
           ? Center(child: CircularProgressIndicator() )
           : Loader(headlines),*/
           _isLoading || headlines.length == 0
-          ? GrupoEstructuraTarjeta(35)
+          ? GrupoEstructuraTarjeta(15)
           : Noticias(headlines),
       
       backgroundColor: 
@@ -68,8 +73,6 @@ class _Tab1PageState extends State<Tab1Page> with AutomaticKeepAliveClientMixin{
    );
   }
 
-  @override
-  bool get wantKeepAlive => true;
 }
 
 
@@ -79,7 +82,7 @@ class _Tab1PageState extends State<Tab1Page> with AutomaticKeepAliveClientMixin{
 
 class GrupoEstructuraTarjeta extends StatelessWidget {
 
-  double topMargin;
+  final double topMargin;
 
   GrupoEstructuraTarjeta( this.topMargin );
   
@@ -155,7 +158,7 @@ class CartaEstructuraTarjeta extends StatelessWidget {
         ),
 
         SizedBox(
-          height: 30,
+          height: 20,
         )
       ],
     );

@@ -6,7 +6,7 @@ import 'package:i_news/db/db.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:i_news/pages/noticia_web.dart';
-import 'package:i_news/search/searc_delegate.dart';
+import 'package:share/share.dart';
 
 
 class Listado extends StatelessWidget {
@@ -259,16 +259,17 @@ class _NewsCardState2 extends State<NewsCard2> {
 
   final Noticia noticiaSaved;
 
+  bool canVibrate = false;
+
   _NewsCardState2( this.noticiaSaved );
 
-  
+  @override
+  void initState() {
+    super.initState();
+  }
 
-  
   
   bool guardado = true;
-
-
-
 
 
   @override
@@ -279,6 +280,10 @@ class _NewsCardState2 extends State<NewsCard2> {
 
         Navigator.push(context, MaterialPageRoute(builder: (context) => ShowPage(noticiaSaved.url)));
 
+      },
+
+      onLongPress: () {
+        Share.share("Mira esta noticia: \n\n ${noticiaSaved.titulo} \n\n ${noticiaSaved.url} \n\n ${noticiaSaved.nombreFuente}");
       },
       
       child: Column(
@@ -423,11 +428,6 @@ class _MiListaSaved extends State<ListaSaved> {
     String titularParseado = titular.trim().toLowerCase();
 
     if (noticiaParseado.contains(titularParseado)) {
-
-      NewsSavedSearchDelegate.actualizarHistorial(noticia);
-
-      print("HISTORIAAAL");
-      print(NewsSavedSearchDelegate.historial);
       
       return NewsCard2(noticia);
     }
@@ -443,6 +443,7 @@ class _MiListaSaved extends State<ListaSaved> {
         itemCount: noticias.length,
         itemBuilder:
             (context, i) =>
+              //Container(
               Dismissible(key: UniqueKey(),
                 direction: DismissDirection.startToEnd,
                 background: ClipRRect(
@@ -472,6 +473,8 @@ class _MiListaSaved extends State<ListaSaved> {
                     await DB.insert(noticiasReversed[i]);
 
                     cargaNoticias();
+                    
+                    
                   }
                 ),
                 shape: RoundedRectangleBorder( 
@@ -485,7 +488,7 @@ class _MiListaSaved extends State<ListaSaved> {
               ScaffoldMessenger.of(context).showSnackBar(snackbarUndo);
               
 
-              cargaNoticias();
+              await cargaNoticias();
             },
             child: filtrarNoticias(noticiasReversed[i]),
           ),
